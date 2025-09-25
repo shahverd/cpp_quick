@@ -1,4 +1,5 @@
-CPP_QUICK
-=========
+Quick Template for C++
+======================
 
-Simply clone the repo and modify the Makefile
+Simply run `cppnew PROJECT_NAME` to create a new project.
+Regular worflow of `cmake .` and `make` are available``

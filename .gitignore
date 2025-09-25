@@ -1,3 +1,10 @@
 .vscode
+CMakeFiles
 bin
 build
+.cache
+CMakeCache.txt
+CTestTestfile.cmake
+Makefile
+cmake_install.cmake
+compile_commands.json
