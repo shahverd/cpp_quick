@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Define project name (change this to rename the project)
-set(PROJECT_NAME HelloProk)
+set(PROJECT_NAME HelloWorld)
 
 # Project name and version
 project(${PROJECT_NAME} VERSION 1.0)
