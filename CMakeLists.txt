@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Define project name (change this to rename the project)
+# Define project name
 set(PROJECT_NAME HelloWorld)
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 
 # Project name and version
 project(${PROJECT_NAME} VERSION 1.0)
@@ -18,6 +23,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 # Redirect compile_commands.json to CMakeFiles
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_COMPILE_COMMANDS_DIR ${CMAKE_BINARY_DIR}/CMakeFiles)
+
+
+
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
   execute_process(
     COMMAND ${CMAKE_COMMAND} -E create_symlink
@@ -29,32 +37,34 @@ endif()
 # Enable testing
 enable_testing()
 
-# Add executable for main project
+# ---------- Main executable ----------
 add_executable(${PROJECT_NAME} src/main.cpp)
-
-# Include directories for main project
 target_include_directories(${PROJECT_NAME} PRIVATE include)
+
+# ✅ Custom output name depending on build type
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
+else()
+    # Default or Debug
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "main")
+endif()
 
 # Add custom target for 'make run'
 add_custom_target(run
-  COMMAND ${PROJECT_NAME}
+  COMMAND $<TARGET_FILE_NAME:${PROJECT_NAME}>
   DEPENDS ${PROJECT_NAME}
   WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
   COMMENT "Running ${PROJECT_NAME}"
 )
 
-# Add test executable, explicitly using test folder
+# ---------- Tests ----------
 file(GLOB TEST_SOURCES test/*.cpp)
 add_executable(${PROJECT_NAME}Tests ${TEST_SOURCES})
-
-# Include directories for tests
 target_include_directories(${PROJECT_NAME}Tests PRIVATE include)
 
-# Find and link a testing framework (e.g., GoogleTest)
 find_package(GTest REQUIRED)
 target_link_libraries(${PROJECT_NAME}Tests GTest::GTest GTest::Main)
 
-# Add test, output to build/test
 add_test(
   NAME ${PROJECT_NAME}Tests
   COMMAND ${PROJECT_NAME}Tests
